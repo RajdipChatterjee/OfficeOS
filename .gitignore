@@ -1,0 +1,32 @@
+
+# .NET build output
+**/bin/
+**/obj/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+
+# Rider / IntelliJ
+.idea/
+
+# Node.js
+node_modules/
+dist/
+build/
+coverage/
+
+# Environment variables and local secrets
+.env
+.env.*
+!.env.example
+**/appsettings.*.local.json
+
+# Logs
+*.log
+logs/
+
+# OS files
+.DS_Store
+Thumbs.db
