@@ -1,3 +1,5 @@
+using OfficeOS.Api.Configuration;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
@@ -9,6 +11,8 @@ var configuration = builder.Configuration;
 Console.WriteLine(configuration["MongoDbSettings:ConnectionString"]);
 Console.WriteLine(configuration["MongoDbSettings:DatabaseName"]);
 Console.WriteLine(configuration["MongoDbSettings:CollectionName"]);
+
+builder.Services.Configure<MongoDbSettings>(builder.Configuration.GetSection("MongoDbSettings"));
 
 var app = builder.Build();
 
