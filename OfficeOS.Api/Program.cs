@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Options;
+using MongoDB.Driver;
 using OfficeOS.Api.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -6,13 +8,19 @@ builder.Services.AddControllers();
 
 builder.Services.AddSwaggerGen();
 
-var configuration = builder.Configuration;
+builder.Services.Configure<MongoDbSettings>(builder.Configuration.GetSection(MongoDbSettings.SectionName));
 
-Console.WriteLine(configuration["MongoDbSettings:ConnectionString"]);
-Console.WriteLine(configuration["MongoDbSettings:DatabaseName"]);
-Console.WriteLine(configuration["MongoDbSettings:CollectionName"]);
+builder.Services.AddSingleton<IMongoClient>(sp =>
+{
+    var settings = sp.GetRequiredService<IOptions<MongoDbSettings>>().Value;
+    return new MongoClient(settings.ConnectionString);
+});
 
-builder.Services.Configure<MongoDbSettings>(builder.Configuration.GetSection("MongoDbSettings"));
+builder.Services.AddSingleton<IMongoDatabase>(sp =>
+{
+    var settings = sp.GetRequiredService<IOptions<MongoDbSettings>>().Value;
+    return sp.GetRequiredService<IMongoClient>().GetDatabase(settings.DatabaseName);
+});
 
 var app = builder.Build();
 
